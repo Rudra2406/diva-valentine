@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ALL YOUR EXISTING STYLES – SAME AS BEFORE */
         * {
             margin: 0;
             padding: 0;
@@ -76,7 +75,6 @@
             z-index: -1;
         }
 
-        /* Navigation Tabs */
         .nav-tabs {
             display: flex;
             justify-content: center;
@@ -109,7 +107,6 @@
             font-weight: bold;
         }
 
-        /* Page sections */
         .page {
             display: none;
         }
@@ -242,7 +239,7 @@
             transform: rotate(15deg);
         }
 
-        /* Valentine proposal section (only on home) */
+        /* Valentine proposal section */
         .proposal-box {
             background: #fff0f5dd;
             backdrop-filter: blur(4px);
@@ -309,6 +306,124 @@
             font-family: 'Dancing Script', cursive;
             color: #b23e64;
             min-height: 60px;
+        }
+
+        /* Letter Cover */
+        .letter-cover {
+            margin: 30px auto 20px;
+            text-align: center;
+            cursor: pointer;
+            animation: fadeInUp 1s ease;
+        }
+        .cover-icon {
+            font-size: 8rem;
+            color: #e0799b;
+            filter: drop-shadow(0 10px 15px rgba(190, 80, 120, 0.5));
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        .cover-icon:hover {
+            transform: scale(1.1);
+        }
+        .cover-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #b34466;
+            margin-top: 10px;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* MODAL (love letter popup) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff9fe;
+            padding: 40px;
+            border-radius: 80px 20px 80px 20px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 50px rgba(190, 100, 130, 0.5);
+            border: 5px solid #ffb6c1;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: #b34466;
+            cursor: pointer;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .close-modal:hover {
+            color: #e6678f;
+            transform: scale(1.2);
+        }
+
+        .love-letter-popup {
+            text-align: center;
+        }
+        .love-letter-popup h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #b34466;
+            margin-bottom: 20px;
+        }
+        .love-letter-popup p {
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #1d3f5c;
+            white-space: pre-line;
+            font-weight: 300;
+            text-align: left;
+            padding: 0 15px;
+        }
+        /* Small love animations inside modal */
+        .modal-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: inherit;
+        }
+        .modal-hearts i {
+            position: absolute;
+            color: rgba(231, 100, 140, 0.2);
+            font-size: 1.2rem;
+            animation: floatHeart 6s infinite ease-in-out;
+        }
+        @keyframes floatHeart {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
 
         .gallery-title {
@@ -415,25 +530,6 @@
             color: #2b5c77;
             font-weight: 300;
             margin: 10px 0;
-        }
-
-        .dating-list {
-            text-align: left;
-            margin-top: 15px;
-            padding-left: 20px;
-            list-style-type: none;
-        }
-        .dating-list li {
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .dating-list i {
-            font-size: 1.2rem;
-            color: #e0799b;
-            width: 24px;
         }
 
         .rose-badge {
@@ -588,11 +684,47 @@
             .music-player { flex-direction: column; text-align: center; }
             audio { width: 100%; }
             .btn-valentine { font-size: 1.5rem; padding: 10px 25px; }
+            .modal-content { padding: 30px 15px; }
+            .love-letter-popup p { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
     <div class="floating-hearts" id="floatContainer"></div>
+
+    <!-- LOVE LETTER MODAL (hidden initially) -->
+    <div id="loveLetterModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-hearts" id="modalHearts"></div>
+            <div class="love-letter-popup">
+                <h2>for you, Diva ❤️</h2>
+                <p>
+Happy Valentine's Day to the girl who loves like it's the last warm thing left in the world.
+
+I loved you not softly but in the way oceans love the moon, pulling, aching, even when it hurts.
+
+You said you get anxious when love is mentioned. I get anxious when it isn't.
+
+I cried in front of you like a child holding glass, and you held your distance like it was safer than holding me.
+
+Tell me is love supposed to feel this heavy? Like carrying a heart that beats louder for someone who listens quieter each day?
+
+Some days I don't eat. Some days I don't speak. My chest feels like a locked room where your name echoes and echoes.
+
+But still I choose you.
+
+And maybe that's my flaw. Or maybe that's love.
+
+Because love, for me, is not roses and promises. It is staying even when I feel unwanted. It is hoping even when I feel foolish. It is breaking quietly so you don't feel guilty.
+
+Happy Valentine's Day to the one I love and to the version of me who loved too deeply to ever be casual.
+
+If love is a risk, I was all in.
+                </p>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="rose-corner rose-1">🌹🌹</div>
@@ -628,6 +760,7 @@
 
         <!-- HOME PAGE -->
         <div id="home" class="page active-page">
+            <!-- Original short love note -->
             <div class="love-note">
                 <p>
                     Diva, you're the calm harbor where my heart anchors,<br>
@@ -645,6 +778,11 @@
                     <button class="btn-valentine btn-no" id="noBtn">No</button>
                 </div>
                 <div class="response-message" id="responseMsg"></div>
+                <!-- Letter cover (hidden initially) -->
+                <div id="letterCover" class="letter-cover" style="display: none;">
+                    <div class="cover-icon">💌</div>
+                    <div class="cover-text">open your letter</div>
+                </div>
             </div>
 
             <!-- Photo gallery with local images -->
@@ -728,7 +866,7 @@
 
     <script>
         (function() {
-            // Floating hearts
+            // Floating hearts background
             const floatContainer = document.getElementById('floatContainer');
             const symbols = ['🌸', '🌹', '💙', '🌸', '🌊', '🌹', '💕', '🌹', '🌸', '💙'];
             for (let i = 0; i < 26; i++) {
@@ -740,6 +878,18 @@
                 floatEl.style.animationDelay = (Math.random() * 5) + 's';
                 floatEl.style.opacity = 0.3 + Math.random() * 0.4;
                 floatContainer.appendChild(floatEl);
+            }
+
+            // Small floating hearts inside modal
+            const modalHearts = document.getElementById('modalHearts');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('i');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                modalHearts.appendChild(heart);
             }
 
             // Page navigation
@@ -759,11 +909,14 @@
                 });
             });
 
-            // Valentine proposal: running No button (only on home)
+            // Valentine proposal: running No button & letter cover
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const responseMsg = document.getElementById('responseMsg');
             const proposalBox = document.getElementById('proposalBox');
+            const letterCover = document.getElementById('letterCover');
+            const modal = document.getElementById('loveLetterModal');
+            const closeBtn = document.querySelector('.close-modal');
 
             if (noBtn) {
                 function moveNoButton() {
@@ -783,9 +936,28 @@
                     e.preventDefault();
                     moveNoButton();
                 });
+
+                // Yes button click: hide buttons, show cover
                 yesBtn.addEventListener('click', function() {
                     responseMsg.innerHTML = "Yay! You're my Valentine! ❤️🌹";
                     noBtn.style.display = 'none';
+                    yesBtn.style.display = 'none';
+                    letterCover.style.display = 'block';
+                });
+
+                // Click on cover opens modal
+                letterCover.addEventListener('click', function() {
+                    modal.style.display = 'flex';
+                });
+
+                // Close modal
+                closeBtn.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+                window.addEventListener('click', function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
                 });
             }
 
